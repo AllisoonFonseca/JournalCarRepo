@@ -12,10 +12,12 @@ namespace JournalCar.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserDomain userDomain;
+        private readonly ILogger<UserController> logger;
 
-        public UserController(IUserDomain userDomain)
+        public UserController(IUserDomain userDomain, ILogger<UserController> logger)
         {
             this.userDomain = userDomain;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -27,7 +29,7 @@ namespace JournalCar.API.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: include logs
+                logger.LogError(ex.Message, ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -45,7 +47,7 @@ namespace JournalCar.API.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: include logs
+                logger.LogError(ex.Message, ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -54,8 +56,17 @@ namespace JournalCar.API.Controllers
         [ValidateModel]
         public async Task<IActionResult> Register([FromBody] UserRegisterRequestDTO user)
         {
-            var newUser = await userDomain.Create(user);
-            return CreatedAtAction(nameof(Get), new {id = newUser.Id}, newUser);
+            try
+            {
+                var newUser = await userDomain.Create(user);
+                return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+                return StatusCode(500, ex.Message);
+            }
+            
         }
         
         [HttpDelete]
@@ -69,7 +80,7 @@ namespace JournalCar.API.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: include logs
+                logger.LogError(ex.Message, ex);
                 return StatusCode(500, ex.Message);
             }
         }
@@ -85,9 +96,9 @@ namespace JournalCar.API.Controllers
                 return Ok(updatedUser);
             }
                 catch (Exception ex)
-                {
-                    // TODO: include logs
-                    return StatusCode(500, ex.Message);
+            {
+                logger.LogError(ex.Message, ex);
+                return StatusCode(500, ex.Message);
             }
 
         }

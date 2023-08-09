@@ -3,6 +3,7 @@ using JournalCar.API.Domain;
 using JournalCar.API.Model.Mapping;
 using JournalCar.API.Repository.User;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,13 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserDomain, UserDomain>();
 
+//Logger
+var logger = new LoggerConfiguration()
+    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("JournalCarDB"),"AppLogsEvent",autoCreateSqlTable: true)
+    .MinimumLevel.Error().CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
