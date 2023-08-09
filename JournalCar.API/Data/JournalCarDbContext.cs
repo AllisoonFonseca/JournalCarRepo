@@ -9,14 +9,17 @@ namespace JournalCar.API.Data
         {
 
         }
+        public JournalCarDbContext() : base()
+        {
 
-        public DbSet<TypeDoc> TypeDoc { get; set; }
-        public DbSet<Status> Status { get; set; }
-        public DbSet<CategoryActivity> CategoryActivity { get; set; }
-        public DbSet<Users> User { get; set; }
-        public DbSet<TypeVehicle> TypeVehicle { get; set; }
-        public DbSet<Vehicle> Vehicle { get; set; }
-        public DbSet<Activity> Activity { get; set; }
+        }
+        public virtual DbSet<TypeDoc> TypeDoc { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<CategoryActivity> CategoryActivity { get; set; }
+        public virtual DbSet<Users> User { get; set; }
+        public virtual DbSet<TypeVehicle> TypeVehicle { get; set; }
+        public virtual DbSet<Vehicle> Vehicle { get; set; }
+        public virtual DbSet<Activity> Activity { get; set; }
 
         // Data Seeding
         protected override void OnModelCreating(ModelBuilder modelBuilder)
